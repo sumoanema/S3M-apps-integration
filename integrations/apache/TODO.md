@@ -28,7 +28,7 @@ apache_BytesPerReq
 
 Since there are metrics missing in native otel receiver, we will need to create a new app based on only these metrics, or we will need to add the missing metrics in native receiver.
 
-2. The metric names emitted by native receiver are not same to that of the once which are getting used in the app. Based on the decision for point 1, We will need to rename them either in the app or in Otel config.
+2. The metric names emitted by native receiver are not same to that of the once which are getting used in the app. Based on the decision for point 1, We will need to rename them either in the app or in Otel config. In addition to this the current metrics emitted by otel receiver has metric name with "state", but in the app this is considered as single metric. We will need to either make changes to App (to check for metric name and state seperately) or to change config for combining these metric name with state name to create a single metric. 
 
 3. Currently the sumo app for apache expects server and port to be tagged in the metrics. If we use the current app, we will need to do otel config change for including these as part of metric send to sumo.
 
