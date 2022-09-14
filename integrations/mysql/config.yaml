@@ -1,0 +1,48 @@
+receivers:
+  mysql:
+    endpoint: localhost:3306
+    username: root
+    password: n4LDkmovaw6oLqBuT2V_UTbZ
+  filelog:
+    include:
+    - /var/log/mysql/mysqld-slow.log
+    start_at: beginning
+
+
+exporters:
+  logging:
+    logLevel: debug
+  sumologic:
+    auth:
+      authenticator: sumologic
+    compress_encoding: ""
+    source_category: "anema/otel/native/mysql"
+    source_name: "anema Otel native mysql"
+    source_host: "anemaOtelMysql"
+    sending_queue:
+      enabled: true
+    metric_format: otlp
+    log_format: otlp
+    # metric_format: "prometheus"
+
+extensions:
+  sumologic:
+    collector_name: anema_hosted_collector_otel_mysql
+    collector_category: anema/otel/native/mysql
+    install_token: U1VNT2tmTWRpUndnOTNKOG5lMXFxUFNTSTlxOWM5dzhodHRwczovL2NvbGxlY3RvcnMuc3Vtb2xvZ2ljLmNvbQ==
+    api_base_url: https://open-collectors.sumologic.com
+    collector_fields:
+      environment : "anemadevotel"
+      db_system : "mysql"
+      db_cluster : "anemaClusterotel"
+      component : "database"
+
+service:
+  extensions: [sumologic]
+  pipelines:
+    metrics:
+      receivers: [mysql]
+      exporters: [sumologic]
+    logs:
+      receivers: [filelog]
+      exporters: [sumologic, logging]
